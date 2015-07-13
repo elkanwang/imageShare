@@ -1,0 +1,16 @@
+#content{
+  margin: 0 auto;
+  height: 600px;
+  background: #eee;
+}
+
+input{
+  display: inline !important;
+  margin-left: 20px;
+}
+
+img{
+  margin: 10px;
+  max-height: 150px;
+  display: block;
+}
