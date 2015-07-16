@@ -2,17 +2,18 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>File share</title>
+        <title>Image share</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> 
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <div id="UploadBox" class="col-md-10">
+        <div id="UploadBox" class="col-md-10 col-md-offset-1">
+            <h1>Image Share</h1>
             <div id="content"></div>
-            <span id="UploadArea">
-                <label for="FileBox">Choose A File: </label><input type="file" id="FileBox"><br>
-                <button type='submit' id='UploadButton' class='btn btn-default'> Upload </button>
-            </span>
+            <div id="UploadArea input-group">
+                <span class="btn btn-default btn-file">Browse <input type="file"></span>
+                <button disabled type='submit' id='UploadButton' class='btn btn-default'> Upload </button>
+            </div>
         </div> 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script src="http://127.0.0.1:5001/socket.io/socket.io.js"></script>

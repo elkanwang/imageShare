@@ -1,6 +1,14 @@
 $(function() {
     var socket = io.connect('http://0.0.0.0:5001');
 
+    $('input[type=file]').on("change",function(){
+        if($(this)[0].files[0].name.match(/\.(jpg|jpeg|png|gif)$/)){
+            $("button[type=submit]")[0].disabled = false;
+        } else {
+            $("button[type=submit]")[0].disabled = true;
+        }   
+    });
+
     socket.on('connect', function() {
         var delivery = new Delivery(socket);
 
@@ -8,6 +16,8 @@ $(function() {
             $("button[type=submit]").click(function(evt) {
                 var file = $("input[type=file]")[0].files[0];
                 delivery.send(file);
+                $("input[type=file]").val('');
+                $(this)[0].disabled = true;
                 evt.preventDefault();
             });
         });
@@ -22,19 +32,23 @@ $(function() {
 
         delivery.on('receive.success', function(file) {
             if (file.isImage()) {
-                $('#content').append('<img src=' + file.dataURL() + ' class="img-rounded"></img>');
+                $('#content').append('<div><img src=' + file.dataURL() + ' class="img-rounded"></img></div>');
             }
         });
 
         socket.on('user connected', function() {
-            $('#content').append("<p>A user has joined the room.</p>");
+            $('#content').append("<p class='alert alert-success'>A user has joined the room.</p>");
+        });
+        
+        socket.on('user leaved', function(){
+            $('#content').append("<p class='alert alert-danger'>A user has leaved the room.</p>");
         });
         
         socket.on('sendfile',function(info){
             if(info.image) {
                 var src = 'data:image/jpeg;base64,' + info.buffer; 
                 console.log('receiving images from others...');
-                $('#content').append('<img src=' + src + '></img>');            
+                $('#content').append('<div><img class="img-rounded" src=' + src + '></img></div>');            
             }
         });
     });
