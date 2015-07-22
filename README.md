@@ -10,10 +10,10 @@ npm --version
 
 If not, please visit [install npm](https://github.com/npm/npm) and [install node](https://nodejs.org/download/)
 
-Then, you can run the server
+Then, you can install the needed files and run the server
 ```
 npm install
 node server.js
 ```
 
-Then you can just open the `index.html` file.
+Then you can just open the website at `http://localhost:3000`.

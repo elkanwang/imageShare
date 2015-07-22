@@ -1,6 +1,7 @@
 $(function() {
     var socket = io.connect('http://0.0.0.0:5001');
 
+    // manually broadcasting images to all the members in the room
     $('input[type=file]').on("change",function(){
         if($(this)[0].files[0].name.match(/\.(jpg|jpeg|png|gif)$/)){
             $("button[type=submit]")[0].disabled = false;
@@ -9,8 +10,10 @@ $(function() {
         }   
     });
 
+    //send a random file when pressing Ctrl+K
     $(document).keypress("k",function(e) {
         if(e.ctrlKey){
+            $('#content').append('<p class="alert alert-info">You just sent a random picture.</p>')
             socket.emit("random file","http://pc-research.uwaterloo.ca/CheatSheetSample.png");
         }    
     });
@@ -44,8 +47,8 @@ $(function() {
             }
         });
 
-        socket.on('user connected', function() {
-            $('#content').append("<p class='alert alert-success'>A user has joined the room.</p>");
+        socket.on('user connected', function(count) {
+            $('#content').append("<p class='alert alert-success'>A user has joined the room. There are now " + count + " people in the room.</p>");
         });
         
         socket.on('upload', function(o){
@@ -53,8 +56,8 @@ $(function() {
             $('#content').append('<div><img class="img-rounded" src=' + o.url  + '></img></div>'); 
         })
         
-        socket.on('user leaved', function(){
-            $('#content').append("<p class='alert alert-danger'>A user has leaved the room.</p>");
+        socket.on('user left', function(count){
+            $('#content').append("<p class='alert alert-danger'>A user has just left the room. There are now " + count + " people in the room.</p>");
         });
         
         socket.on('sendfile',function(info){
