@@ -9,6 +9,13 @@ $(function() {
         }   
     });
 
+    $(document).keypress("k",function(e) {
+        if(e.ctrlKey){
+            socket.emit("random file","http://pc-research.uwaterloo.ca/CheatSheetSample.png");
+        }    
+    });
+    
+
     socket.on('connect', function() {
         var delivery = new Delivery(socket);
 
@@ -20,6 +27,7 @@ $(function() {
                 $(this)[0].disabled = true;
                 evt.preventDefault();
             });
+            
         });
 
         delivery.on('send.success', function(fileUID) {
@@ -39,6 +47,11 @@ $(function() {
         socket.on('user connected', function() {
             $('#content').append("<p class='alert alert-success'>A user has joined the room.</p>");
         });
+        
+        socket.on('upload', function(o){
+            console.log(o.url);
+            $('#content').append('<div><img class="img-rounded" src=' + o.url  + '></img></div>'); 
+        })
         
         socket.on('user leaved', function(){
             $('#content').append("<p class='alert alert-danger'>A user has leaved the room.</p>");

@@ -7,6 +7,7 @@ var io = require('socket.io').listen(5001),
 io.sockets.on('connection', function(socket) {
 
     socket.broadcast.emit('user connected');
+    console.log('A user has connected.')
 
     var delivery = dl.listen(socket);
 
@@ -33,5 +34,9 @@ io.sockets.on('connection', function(socket) {
 
     socket.on('disconnect', function(){
         socket.broadcast.emit("user leaved");
+    });
+
+    socket.on('random file', function(url){
+        socket.broadcast.emit("upload", {url: url});
     });
 });
