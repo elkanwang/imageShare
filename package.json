@@ -1,7 +1,7 @@
 {
   "name": "imageshare",
   "version": "1.0.0",
-  "description": "## How to install",
+  "description": "image share to be used in cheatsheet",
   "main": "main.js",
   "dependencies": {
     "delivery": "^0.0.3",
