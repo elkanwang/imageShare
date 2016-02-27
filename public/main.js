@@ -35,8 +35,7 @@ $(function() {
             $('#content').append("<p class='alert alert-danger'>Note id " + noteid + " does not exist.</p>");
           }
         },
-        error: function(jqXHR, textStatus, errorThrown) {
-        }
+        error: function(jqXHR, textStatus, errorThrown) {}
       });
     }
   });
