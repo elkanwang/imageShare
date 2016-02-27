@@ -41,6 +41,9 @@ io.sockets.on('connection', function(socket) {
         fs.writeFile(filepath, file.buffer, function(err) {
             if (err) {
                 console.log('File could not be saved.');
+                console.log('filepath: ' + filepath);
+                console.log(file);
+                console.log('err: ' + err);
             } else {
                 console.log('File saved.');
                 delivery.send({

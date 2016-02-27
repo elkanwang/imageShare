@@ -1,5 +1,5 @@
 $(function() {
-    var socket = io.connect('http://0.0.0.0:5001');
+    var socket = io.connect('http://localhost:5001');
 
     // manually broadcasting images to all the members in the room
     $('input[type=file]').on("change",function(){
@@ -9,21 +9,65 @@ $(function() {
             $("button[type=submit]")[0].disabled = true;
         }   
     });
+    
+    function cheatsheetCallback(data) {
+        //console.log("in callback with", data);
+        //console.log(data["cheatsheets"][0]);
+        //if (data["cheatsheets"][0] !== undefined) {
+            var image = data["cheatsheets"][0]["image"];
+            $('#content').append('<div><img src=' + image + ' class="img-rounded"></img></div>');
+        //} else {
+        //    $('#content').append("<p class='alert alert-danger'>Note id " + noteid + " does not exist.</p>");
+        //}
+    }
+    
+    $("button#btn-get-note").click(function(evt) {
+        var noteid = $("input#text-note-id").val();
+        console.log("note id:", noteid);
+        if (noteid !== "" && noteid !== null) {
+            $.ajax({
+                type: "GET",
+                url: "https://pc-research.uwaterloo.ca/CheatSheet/GetSheets/?cheatsheetid=" + noteid,// + "&callback=cheatsheetCallback",
+                crossDomain: true,
+                dataType: 'jsonp',
+                //jsonpCallback: "cheatsheetCallback",
+                success: function(data) {
+                    console.log("success!");
+                    if (data["cheatsheets"][0] !== undefined) {
+                        var image = data["cheatsheets"][0]["image"];
+                        $('#content').append('<div><img src=' + image + ' class="img-rounded"></img></div>');
+                    } else {
+                        $('#content').append("<p class='alert alert-danger'>Note id " + noteid + " does not exist.</p>");
+                    }
+                    //var image = data["cheatsheets"][0]["image"];
+                    //$('#content').append('<div><img src=' + image + ' class="img-rounded"></img></div>');
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    //$('#content').append("<p class='alert alert-danger'>Note id " + noteid + " does not exist.</p>");
+                }
+            });
+        }
+    });
 
     //send a random file when pressing Ctrl+K
-    $(document).keypress("k",function(e) {
-        if(e.ctrlKey){
-            $('#content').append('<p class="alert alert-info">You just sent a random picture.</p>')
-            socket.emit("random file","http://pc-research.uwaterloo.ca/CheatSheetSample.png");
-        }    
+    $(document).on("keydown",function(e) {
+        console.log("keydown", e);
+        if (e.ctrlKey && e.which == 77){
+            $('#content').append('<p class="alert alert-info">You just sent a random picture.</p>');
+            socket.emit("random file","https://pc-research.uwaterloo.ca/CheatSheetSample.png");
+        }
     });
+    
+    //$(document).on("keydown", function(e) { console.log(e); });
+    
+    //$(document).on("keyup", function(e) { console.log(e); });
     
 
     socket.on('connect', function() {
         var delivery = new Delivery(socket);
 
         delivery.on('delivery.connect', function(delivery) {
-            $("button[type=submit]").click(function(evt) {
+            $("button#UploadButton").click(function(evt) {
                 var file = $("input[type=file]")[0].files[0];
                 delivery.send(file);
                 $("input[type=file]").val('');
